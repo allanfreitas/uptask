@@ -1,4 +1,51 @@
 # UpTask
+
+<p align="center">
+<a href="https://github.com/allanfreitas/uptask">
+<img src="https://raw.githubusercontent.com/allanfreitas/uptask/master/uptask-logo.png"></p>
+</a>
+
+<p align="center">
+
+<a href="https://github.com/allanfreitas/uptask">
+    <img src="https://img.shields.io/pypi/v/uptask.svg?style=flat-square" 
+    alt="PyPI version">
+    </a>
+
+<a href="https://www.python.org/">
+    <img src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg" 
+    alt=""></a>
+
+
+<a href="https://pypi.python.org/pypi/uptask/">
+    <img src="https://img.shields.io/pypi/status/uptask.svg" 
+    alt="PyPI status"></a>
+
+
+<a href="https://pypi.python.org/pypi/uptask/">
+    <img src="https://img.shields.io/pypi/pyversions/uptask.svg" 
+    alt="PyPI pyversions"></a>
+    
+</p>
+
+<p align="center">
+
+<a href="https://github.com/allanfreitas/uptask/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/allanfreitas/uptask.svg?style=flat-square" 
+    alt=""></a>
+
+
+<a href="https://github.com/allanfreitas/uptask/stargazers">
+    <img src="https://img.shields.io/github/stars/allanfreitas/uptask.svg?style=flat-square" 
+    alt=""></a>
+
+
+<a href="https://github.com/allanfreitas/uptask/issues">
+    <img src="https://img.shields.io/github/issues/allanfreitas/uptask.svg?style=flat-square" 
+    alt=""></a>
+
+</p>
+
 Task Runner(SSH, *soon will run local tasks too*) made in Python
 
 #WIP

@@ -1,0 +1,6 @@
+#sudo yum update -y
+#history -c
+pwd
+sleep 2 && pwd && ls -lah
+#sudo yum instal nano
+sudo lid -g wheel
