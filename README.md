@@ -1,8 +1,6 @@
-# UpTask
-
 <p align="center">
 <a href="https://github.com/allanfreitas/uptask">
-<img src="https://raw.githubusercontent.com/allanfreitas/uptask/master/uptask-logo.png"></p>
+<img src="https://raw.githubusercontent.com/allanfreitas/uptask/master/uptask-logo-small.png"></p>
 </a>
 
 <p align="center">
