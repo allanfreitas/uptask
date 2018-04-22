@@ -1,5 +1,5 @@
 # UpTask
-Task Runner(Local and SSH) made in Python
+Task Runner(SSH, *soon will run local tasks too*) made in Python
 
 #WIP
 It's a Work in Progress :)
@@ -14,3 +14,90 @@ or on local mode(It's on my next features list)
 
 Like Fabric or Capistrano, It's for my needs to start,
 but I hope it will serve to others :)
+
+<hr>
+
+# Quick Start
+
+## Install
+```shell
+$ pip install uptask
+```
+It's only tested on python 3.6 for now :)
+
+## Basic Usage
+After install, you must create a folder where you want to keep your files with commands to execute.
+
+Ex.: I use ```$HOME/code/scripts```
+
+**Tip: You can organize in subfolders your files** 
+
+```shell
+$ cd to_your_desired_path
+$ uptask init
+```
+The command ```uptask init``` will create a .env file
+with the following contents:
+
+```shell
+# UpTask Env
+# Any Other Vars in the future will be using the "UPTASK_" Prefix
+UPTASK_HOST=127.0.0.1
+UPTASK_USER=
+UPTASK_PASS=
+```
+
+Now let's imagine that you have a file with the following contents.
+
+name of the file: ```check_home_list.txt ```
+```
+# Any Line starting with a "#" will be ignored
+#sudo yum update -y
+
+# You can use many "one-line" bash format like the line below
+pwd && ls -lah
+
+#this line will trigger a error since "instal" it's not a valid "yum" command
+sudo yum instal nano
+# but for now the line above will not stop the execution, it's on my next features checklist.
+sudo lid -g wheel
+```
+
+```shell
+$ uptask runfile check_home_list.txt
+```
+It will output all commands output like if you are running them on the server.
+
+
+## #Version 0.1.0
+
+For now you have 2 commands only
+
+```shell
+# "init" command > creates the .env with default vars
+$ uptask init
+
+# "runfile" command > needs a file name relative to the path it's been called
+$ uptask runfile your_file_to_run.txt
+```
+
+## Disclaimer
+I'm not a native English speaker, 
+if you find any grammar mistakes in the documentation or in the code, 
+make a pull request, open a issue or please let me know by any contact way :)
+
+
+## Contributing
+
+Considering contributing to the **Uptask**?
+
+**Thank you!**
+
+You can contribute doing some of theese:
+- send pull requests
+- report bugs 
+- asking for new features :)
+
+## License
+
+**Uptask** project is open-source under the [MIT license](https://opensource.org/licenses/MIT).
