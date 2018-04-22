@@ -41,8 +41,8 @@ setup(
     ],
     keywords='tasks development runner',
     install_requires=[
-        'python-dotenv>=0.8.2',
-        'paramiko>=2.4.1',
-        'colorama==0.3.4'
+        'python-dotenv==0.8.2',
+        'paramiko==2.4.1',
+        'colorama==0.3.4',
     ]
     )
