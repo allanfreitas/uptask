@@ -74,6 +74,14 @@ class CompileTasks:
 
         return parsed_script
 
+    # Work In Progress (WIP)
+    def _parse_task_options(self, task_name):
+        if task_name.find(',') == -1:
+            return {'name': task_name, 'options': {}}
+        else:
+            task = task_name.split(',')
+            return {'name': task[0], 'options': {}}
+
     def _run_compiler(self,str_start, str_end):
         pattern = self.baseRegex.format(str_start, str_end)
         return re.finditer(pattern, self.unparsed_file_content, re.MULTILINE | re.DOTALL)

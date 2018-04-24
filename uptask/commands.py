@@ -5,13 +5,17 @@ from .helpers import print_comment, print_info, print_error, print_question, cle
 from .remotessh import RemoteSsh
 from .config import Config
 
+from .tasks import Tasks
+
 from colorama import Fore, Back, Style
 
 
 class Commands:
     def __init__(self, current_path):
         self.arguments = {}
+        self.arguments_custom_parse = []
         self.argParser = None
+        self.positional_args = 0
 
         self.command_list = {
             'init': {
@@ -21,6 +25,14 @@ class Commands:
             'runfile': {
                 'description': 'Read a Simple Text File With Linux Commands to execute',
                 'function_name': '_run_file'
+            },
+            'tasks': {
+                'description': 'Read tasks file and list the available tasks to execute',
+                'function_name': '_run_tasks_list'
+            },
+            'run': {
+                'description': 'Read tasks file and execute the requested task',
+                'function_name': '_run_tasks_run'
             },
         }
         self.current_path = current_path
@@ -36,13 +48,26 @@ class Commands:
     def _list_available_commands(self):
         print_comment('Available Commands:')
 
+        title_size = 0
         for cmd, info in self.command_list.items():
-            print_info("    {}: {}".format(cmd, info['description']))
+            cmd_size = len(cmd)
+            if cmd_size > title_size:
+                title_size = cmd_size
 
-        print('\n')
-        print_comment('How run a command?')
+        for cmd, info in self.command_list.items():
+            print_info("    {cmd} : {desc}".format(cmd=cmd.ljust(title_size), desc=info['description']))
+
+        print_comment('\nHow run a command?')
         print_info("    updtask runfile mytxtfile\n")
         print_comment('# INFO: Each command has it\'s own params ##\n')
+
+    def _run_tasks_list(self, param):
+        tasks = Tasks(self.config)
+        tasks.list_tasks(self.arguments)
+
+    def _run_tasks_run(self, param):
+        tasks = Tasks(self.config)
+        tasks.run_task(self.arguments, param)
 
     def _run_file(self, param):
         if param == '':
@@ -77,11 +102,18 @@ UPTASK_PASS=your_pass
         runner = getattr(self, func_to_call)
 
         param = ''
-        if len(sys.argv) > 2:
-            param = sys.argv[2]
+        if len(self.arguments_custom_parse) > 1:
+            param = self.arguments_custom_parse[1]
             self.argParser.add_argument('cmd_param', help="Command Param to Run", default='list')
 
+        self.argParser.add_argument("-f", "--file", help="File in Tasks Pattern", required=False,
+                                    default="tasks.uptask")
+
+        self.argParser.add_argument("--host", help="Host to Connect", required=False,
+                                    default=None)
+
         self.arguments = self.argParser.parse_args()
+
         # runner it's the function_name on the command_list for the argv[1]
         runner(param)
 
@@ -104,13 +136,19 @@ UPTASK_PASS=your_pass
     def run(self):
         self.argParser = argparse.ArgumentParser()
 
-        if len(sys.argv) == 1:
+        for arg in sys.argv[1:]:
+            if not arg.startswith('-'):
+                self.positional_args = self.positional_args + 1
+                self.arguments_custom_parse.append(arg)
+
+        if len(self.arguments_custom_parse) == 0:
             self._list_available_commands()
         else:
+            # print(self.arguments_custom_parse)
             # If has more than 1 argument check for the command
-            if self._if_command_is_available(sys.argv[1]):
+            if self._if_command_is_available(self.arguments_custom_parse[0]):
                 self.argParser.add_argument('command', help="Which Command to Run", default='list')
-                self._run_cmd(sys.argv[1])
+                self._run_cmd(self.arguments_custom_parse[0])
             else:
                 print_error('#### ------------------------ ! ERROR ! ------------------------- ####')
                 print_error('#### -------- Command not Found! Check the list below :) -------- ####')
