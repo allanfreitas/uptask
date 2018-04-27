@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from .helpers import is_accessible, print_error, print_info, print_comment
+from .helpers import is_accessible, print_error, print_info, print_comment, print_lines
 from .CompileTasks import CompileTasks
 from .remotessh import RemoteSsh
 from colorama import Fore
-
+import os
+import sys
+import subprocess
+import shlex
 
 class Tasks:
 
@@ -12,6 +15,8 @@ class Tasks:
         self.compiler = None
         self.config = config
         self.remote = None
+        self.stopAfterMe = False
+        self.stopAfterTask = None
 
     def initialize(self, arguments):
         filename = arguments.file
@@ -33,14 +38,13 @@ class Tasks:
         self.initialize(arguments)
 
         if name in self.compiler.stories.keys():
-            print_info('Running Story: {}'.format(name))
-            print(self.compiler.stories[name])
-            self._run_remote_story(name)
+            self._run_remote_story(name ,self.compiler.stories[name])
         else:
-            if name in self.compiler.stories.keys():
-                print_info('Running Task: {}'.format(name))
-                print(self.compiler.tasks[name])
-                self._run_remote_task(name)
+            if name in self.compiler.tasks.keys():
+                if not self.config.is_local:
+                    self._connect_ssh()
+
+                self._run_remote_task(self.compiler.tasks[name]['script'])
             else:
                 print_error('Error! Story or Task not found on the file')
 
@@ -55,25 +59,63 @@ class Tasks:
         for task in self.compiler.tasks.keys():
             print_info("    {}".format(task))
 
-    def _run_story_mode(self, name):
-        '''
-            WIP - Not implemented yet
-        '''
-        pass
+    def _run_remote_story(self, name, story):
+        print_comment('Running Story: {}'.format(name))
 
-    def _run_remote_task(self, name):
-        '''
-            WIP - Not finished
-        '''
+        if not self.config.is_local:
+            self._connect_ssh()
 
-        # refactor this next 5 lines to improve the "dry"
-        # since it will be used in multiple places
+        for task in story['commands']:
+            self._run_remote_task(task, self.compiler.tasks[task]['script'])
+
+    def _run_remote_task(self, name, script, error_triggered=False):
+        if not error_triggered:
+            print_comment('Running Task: ' + Fore.BLUE + '{}'.format(name))
+        else:
+            print_comment('Running Halt Trigger: ' + Fore.RED + '{}'.format(name))
+
+        if not self.config.is_local:
+            self.remote.exec_cmd(script)
+            print('')
+        else:
+            self._run_local_command(script, name)
+
+    def _run_local_command(self, command, name):
+
+        process = subprocess.Popen(
+            command, shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            encoding='utf8'
+        )
+
+        while True:
+            output = process.stdout.readline()
+
+            if output == '' and process.poll() is not None:
+                if process.returncode == 1:
+                    print_lines(process.stderr.readlines())
+                    name_halted = name+'.halt'
+                    if self.compiler.task_exists(name_halted):
+                        self.stopAfterMe = True
+                        self.stopAfterTask = name
+                        self._run_remote_task(name_halted, self.compiler.tasks[name_halted]['script'], True)
+
+                break
+
+            if output:
+                print(output.strip())
+
+        if self.stopAfterMe:
+            print_error('\nError on Task: {}'.format(self.stopAfterTask))
+            sys.exit(1)
+
+        rc = process.poll()
+        return rc
+
+    def _connect_ssh(self):
         self.remote = RemoteSsh()
         host = self.config.get_attribute('host')
         user = self.config.get_attribute('user')
         password = self.config.get_attribute('pass')
         self.remote.connect(host, user, password)
-
-        # find the task name passed on parameter and if exists run
-        # print_comment('Running: ' + Fore.BLUE + '{}'.format(line[0:29].strip()), ' ')
-        # ssh.exec_cmd(line)

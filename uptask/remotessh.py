@@ -35,13 +35,14 @@ class RemoteSsh:
 
     def exec_cmd(self,cmd):
         stdin,stdout,stderr = self.ssh.exec_command(cmd)
-        return_lines = []
+
         if stderr.channel.recv_exit_status() != 0:
             return_lines = stderr.readlines()
         else:
             return_lines = stdout.readlines()
 
-        if return_lines[0].strip() == "":
-            return_lines.pop(0)
+        if len(return_lines) > 0:
+            if return_lines[0].strip() == "":
+                return_lines.pop(0)
 
         print_lines(return_lines)

@@ -17,6 +17,7 @@ class Config:
         }
         self.conf_file = current_path + '/.env'
         self.is_valid = False
+        self.is_local = False
 
     def initialize(self):
         if is_accessible(self.conf_file, 'r'):
@@ -28,8 +29,14 @@ class Config:
             self.set_attribute('user_host', '{}@{}'.format(self.attributes['user'],self.attributes['host']))
             self.is_valid = True
 
-    def set_attribute(self, atrr, value):
-        self.attributes[atrr] = value
+    def set_attribute(self, attr, value):
+        if attr == 'host':
+            if value in ('local', 'localhost', '127.0.0.1'):
+                self.is_local = True
+            else:
+                self.is_local = False
+
+        self.attributes[attr] = value
 
     def get_attribute(self, attr):
         if attr in self.attributes:

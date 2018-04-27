@@ -26,7 +26,7 @@ class CompileTasks:
     def _check_stories(self):
         for story_key, story in self.stories.items():
             for command in story['commands']:
-                if not self._task_exists(command):
+                if not self.task_exists(command):
                     raise Exception("Story:{} - Task: {} not found".format(story_key, command))
 
     def _parse_regex_result(self, regex_result):
@@ -86,7 +86,7 @@ class CompileTasks:
         pattern = self.baseRegex.format(str_start, str_end)
         return re.finditer(pattern, self.unparsed_file_content, re.MULTILINE | re.DOTALL)
 
-    def _task_exists(self, task_name):
+    def task_exists(self, task_name):
         if task_name in self.tasks:
             return True
         else:

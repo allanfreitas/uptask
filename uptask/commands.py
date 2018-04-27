@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
+import os
 import argparse
 from .helpers import print_comment, print_info, print_error, print_question, clear_string, is_accessible
 from .remotessh import RemoteSsh
@@ -75,7 +76,10 @@ class Commands:
         else:
             if is_accessible(param):
                 with open(param, 'r') as f:
-                    self.via_ssh(f)
+                    if not self.config.is_local:
+                        self.via_ssh(f)
+                    else:
+                        self.via_local(f)
             else:
                 print_error('File doesnt exists in the current folder, or is not readable by the script')
 
@@ -130,6 +134,15 @@ UPTASK_PASS=your_pass
                 print_comment('Running: '+Fore.BLUE + '{}'.format(line[0:29].strip()), ' ')
                 ssh.exec_cmd(line)
                 print('')
+
+        f.close()
+
+    def via_local(self, f):
+        for line in f:
+            if not line.startswith('#'):
+                print_comment('Running: '+Fore.BLUE + '{}'.format(line[0:29].strip()), ' ')
+                p = os.popen(line)
+                print(p.read())
 
         f.close()
 
