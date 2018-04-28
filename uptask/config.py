@@ -18,6 +18,7 @@ class Config:
         self.conf_file = current_path + '/.env'
         self.is_valid = False
         self.is_local = False
+        self.current_path = current_path
 
     def initialize(self):
         if is_accessible(self.conf_file, 'r'):
