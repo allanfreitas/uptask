@@ -84,7 +84,7 @@ After install/update run the following command on your scripts folder to check w
 ```shell
 $ uptask
 
-UpTask 0.2.0
+UpTask 0.2.1
 
 Available Commands:
     init    : Create the .env and tasks.uptask file if doesnt exists
@@ -165,7 +165,7 @@ $ uptask runfile check_home_list.txt
 It will output all commands output like if you are running them on the server.
 
 
-## #Version 0.2.0
+## #Version 0.2.1
 
 For now you have 4 commands only
 
@@ -188,7 +188,7 @@ $ uptask runfile your_file_to_run.txt
 $ uptask tasks
 
 #Output
-UpTask 0.2.0
+UpTask 0.2.1
 
 Available stories:
     checks
@@ -208,7 +208,7 @@ The **.halt** tasks are called upon the command before the **.** returns **ExitC
 $ uptask run checkpython
 
 #Output
-UpTask 0.2.0
+UpTask 0.2.1
 
 Running Task: checkpython
 Python 3.6.5
@@ -220,7 +220,7 @@ Python 3.6.5
 $ uptask run checks 
 
 #Output
-UpTask 0.2.0
+UpTask 0.2.1
 
 Running Story: checks
 Running Task: currentdir
@@ -230,6 +230,8 @@ Python 3.6.5
 ```
 
 ## A Example GIF :)
+
+**On the image is 0.2.0, but it's the same of 0.2.1**
 
 ![UpTask Example GIF](https://i.imgur.com/EqYjyvJ.gif)
 
