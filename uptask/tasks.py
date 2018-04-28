@@ -44,7 +44,7 @@ class Tasks:
                 if not self.config.is_local:
                     self._connect_ssh()
 
-                self._run_remote_task(self.compiler.tasks[name]['script'])
+                self._run_remote_task(name, self.compiler.tasks[name]['script'])
             else:
                 print_error('Error! Story or Task not found on the file')
 
