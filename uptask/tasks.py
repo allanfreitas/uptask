@@ -93,12 +93,14 @@ class Tasks:
             output = process.stdout.readline()
 
             if output == '' and process.poll() is not None:
-                if process.returncode == 1:
+                # print(process.returncode)
+                if process.returncode > 0:
+                    self.stopAfterMe = True
+                    self.stopAfterTask = name
                     print_lines(process.stderr.readlines())
                     name_halted = name+'.halt'
                     if self.compiler.task_exists(name_halted):
-                        self.stopAfterMe = True
-                        self.stopAfterTask = name
+                        
                         self._run_remote_task(name_halted, self.compiler.tasks[name_halted]['script'], True)
 
                 break
