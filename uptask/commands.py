@@ -20,7 +20,7 @@ class Commands:
 
         self.command_list = {
             'init': {
-                'description': 'Create .env file if doesnt exists',
+                'description': 'Create the .env and tasks.uptask file if doesnt exists',
                 'function_name': '_run_init'
             },
             'runfile': {
@@ -99,7 +99,38 @@ UPTASK_PASS=your_pass
             print_info('The .env file was created!')
         else:
             print_info('The .env file already exists!')
-            print_info('Nothing to do :)')
+
+        # tasks.uptask
+        task_uptask_new_contents = '''# Uptask Tasks File
+
+@story(checks)
+    currentdir
+    checkpython
+@endstory
+
+@task(currentdir)
+    pwd
+@endtask
+
+@task(checkpython)
+    python3 --version
+@endtask
+
+# You can configure .halt tasks for a task, and will be triggered if the task name returned a error
+@task(checkpython.halt)
+    echo 'Task checkpython Fail :/'
+@endtask
+
+'''
+
+        tasks_uptask_file = self.config.current_path + '/tasks.uptask'
+        if not is_accessible(tasks_uptask_file):
+            with open(tasks_uptask_file, 'w') as f:
+                f.write(task_uptask_new_contents)
+
+            print_info('The tasks.uptask file was created!')
+        else:
+            print_info('The tasks.uptask file already exists!')
 
     def _run_cmd(self, command_name):
         func_to_call = self.command_list[command_name]['function_name']
